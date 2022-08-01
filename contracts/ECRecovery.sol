@@ -35,12 +35,15 @@ library ECRecovery {
     if (v < 27) {
       v += 27;
     }
+    // add a prefix to your hash and pass itt to your ecrecover function
+    bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+    bytes32 prefixedHash = keccak256(abi.encodePacked(prefix, hash));
 
     // If the version is correct return the signer address
     if (v != 27 && v != 28) {
       return (address(0));
     } else {
-      return ecrecover(hash, v, r, s);
+      return ecrecover(prefixedHash, v, r, s);
     }
   }
 
